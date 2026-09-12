@@ -6,8 +6,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+
 // Servir nuestra página
 app.use(express.static(__dirname));
+
 
 // Contador de usuarios
 let usuariosConectados = 0;
@@ -21,14 +23,14 @@ io.on("connection", (socket) => {
     console.log("Un usuario se ha conectado");
     console.log("Usuarios conectados:", usuariosConectados);
 
+
     // Avisar a todos cuántas personas hay
     io.emit("usuarios", usuariosConectados);
 
 
-    // RECIBIR UN MENSAJE
+    // Recibir un mensaje
     socket.on("mensaje", (datos) => {
 
-        // Crear el mensaje con la hora
         const mensaje = {
 
             nombre: datos.nombre,
@@ -57,7 +59,8 @@ io.on("connection", (socket) => {
         console.log("Un usuario se ha desconectado");
         console.log("Usuarios conectados:", usuariosConectados);
 
-        // Actualizar contador para todos
+
+        // Actualizar contador
         io.emit("usuarios", usuariosConectados);
 
     });
@@ -65,9 +68,13 @@ io.on("connection", (socket) => {
 });
 
 
-// Iniciar servidor
-server.listen(3000, () => {
+// Puerto para Render o para nuestro ordenador
+const PORT = process.env.PORT || 3000;
 
-    console.log("🚀 Servidor iniciado en http://localhost:3000");
+
+// Iniciar servidor
+server.listen(PORT, "0.0.0.0", () => {
+
+    console.log(`🚀 Servidor iniciado en el puerto ${PORT}`);
 
 });
