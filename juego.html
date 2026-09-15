@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mr. KIRK Goian Bego</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #0f172a;
+
+            color: white;
+
+        }
+
+
+        /* =========================
+           PANTALLA DE ENTRADA
+           ========================= */
+
+        #pantallaEntrada {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            background:
+
+                radial-gradient(
+                    circle at top left,
+                    #1e40af,
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at bottom right,
+                    #7c3aed,
+                    transparent 35%
+                ),
+
+                #0f172a;
+
+        }
+
+
+        .entrada {
+
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 40px 35px;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.15);
+
+            border-radius: 24px;
+
+            text-align: center;
+
+            backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.4);
+
+        }
+
+
+        .logo {
+
+            width: 75px;
+            height: 75px;
+
+            margin:
+                0 auto 20px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #8b5cf6
+                );
+
+            font-size: 38px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(59, 130, 246, 0.35);
+
+        }
+
+
+        .entrada h1 {
+
+            margin: 0;
+
+            font-size: 32px;
+
+        }
+
+
+        .subtitulo {
+
+            margin-top: 10px;
+            margin-bottom: 30px;
+
+            color: #cbd5e1;
+
+            font-size: 15px;
+
+        }
+
+
+        .entrada input {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.15);
+
+            border-radius: 12px;
+
+            background:
+                rgba(0, 0, 0, 0.25);
+
+            color: white;
+
+            font-size: 16px;
+
+            outline: none;
+
+            transition: 0.2s;
+
+        }
+
+
+        .entrada input:focus {
+
+            border-color: #60a5fa;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(96, 165, 250, 0.15);
+
+        }
+
+
+        .entrada input::placeholder {
+
+            color: #94a3b8;
+
+        }
+
+
+        .entrada button {
+
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #6366f1
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .entrada button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(59, 130, 246, 0.35);
+
+        }
+
+
+        .entrada button:active {
+
+            transform:
+                translateY(0);
+
+        }
+
+
+        #error {
+
+            color: #f87171;
+
+            min-height: 20px;
+
+            margin-bottom: 0;
+
+        }
+
+
+
+        /* =========================
+           PANTALLA DEL CHAT
+           ========================= */
+
+        #pantallaChat {
+
+            display: none;
+
+            height: 100vh;
+
+            flex-direction: column;
+
+            background: #0f172a;
+
+        }
+
+
+
+        /* =========================
+           CABECERA
+           ========================= */
+
+        .cabecera {
+
+            height: 75px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 25px;
+
+            background:
+                rgba(15, 23, 42, 0.95);
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.2);
+
+        }
+
+
+        .logoPequeno {
+
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #8b5cf6
+                );
+
+            font-size: 22px;
+
+            margin-right: 14px;
+
+        }
+
+
+        .cabeceraTexto h2 {
+
+            margin: 0;
+
+            font-size: 18px;
+
+        }
+
+
+        .estado {
+
+            margin-top: 4px;
+
+            color: #4ade80;
+
+            font-size: 12px;
+
+        }
+
+
+        .usuario {
+
+            margin-left: auto;
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+
+        }
+
+
+
+        /* =========================
+           MENSAJES
+           ========================= */
+
+        #mensajes {
+
+            flex: 1;
+
+            padding: 25px;
+
+            overflow-y: auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            background:
+
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(59, 130, 246, 0.05),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(139, 92, 246, 0.05),
+                    transparent 30%
+                ),
+
+                #111827;
+
+        }
+
+
+        .mensaje {
+
+            width: fit-content;
+
+            max-width: 70%;
+
+            padding: 12px 16px;
+
+            background: #1e293b;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.06);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.15);
+
+            animation:
+                aparecer 0.2s ease;
+
+        }
+
+
+        @keyframes aparecer {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(5px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        /* =========================
+           NOMBRE + RANGO
+           ========================= */
+
+        .nombreUsuario {
+
+            margin-bottom: 5px;
+
+            color: #60a5fa;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+
+        /*
+           El nombre es lo importante.
+           El rango es pequeño y discreto.
+        */
+
+        .rango-botellero {
+
+            color: #d44b4b;
+
+            font-size: 10px;
+
+            font-weight: normal;
+
+            opacity: 0.8;
+
+            margin-left: 5px;
+
+            letter-spacing: 0.2px;
+
+        }
+
+
+        .textoMensaje {
+
+            color: #f8fafc;
+
+            font-size: 15px;
+
+            line-height: 1.4;
+
+        }
+
+
+        .mensajeVacio {
+
+            margin: auto;
+
+            color: #64748b;
+
+            text-align: center;
+
+        }
+
+
+
+        /* =========================
+           ZONA DE ESCRITURA
+           ========================= */
+
+        .zonaEscritura {
+
+            display: flex;
+
+            padding: 15px;
+
+            gap: 10px;
+
+            background: #0f172a;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+        }
+
+
+        .zonaEscritura input {
+
+            flex: 1;
+
+            padding: 14px 18px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.1);
+
+            border-radius: 15px;
+
+            background: #1e293b;
+
+            color: white;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+
+        .zonaEscritura input:focus {
+
+            border-color: #3b82f6;
+
+        }
+
+
+        .zonaEscritura input::placeholder {
+
+            color: #64748b;
+
+        }
+
+
+        .zonaEscritura button {
+
+            padding: 0 22px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #6366f1
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .zonaEscritura button:hover {
+
+            transform:
+                scale(1.03);
+
+            box-shadow:
+                0 8px 20px
+                rgba(59, 130, 246, 0.3);
+
+        }
+
+
+
+        /* =========================
+           PANTALLA DEL JUEGO
+           ========================= */
+
+        #pantallaJuego {
+
+            width: 100%;
+
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #111827;
+
+        }
+
+
+        #pantallaJuego iframe {
+
+            width: 100%;
+
+            height: 100%;
+
+            border: none;
+
+            display: block;
+
+        }
+
+
+
+        /* =========================
+           MÓVILES
+           ========================= */
+
+        @media (max-width: 600px) {
+
+            .entrada {
+
+                padding:
+                    30px 25px;
+
+            }
+
+
+            .cabecera {
+
+                padding: 0 15px;
+
+            }
+
+
+            .usuario {
+
+                display: none;
+
+            }
+
+
+            #mensajes {
+
+                padding: 15px;
+
+            }
+
+
+            .mensaje {
+
+                max-width: 85%;
+
+            }
+
+
+            .zonaEscritura {
+
+                padding: 10px;
+
+            }
+
+
+            .zonaEscritura button {
+
+                padding:
+                    0 16px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         PANTALLA DE ENTRADA
+         ========================= -->
+
+    <div id="pantallaEntrada">
+
+        <div class="entrada">
+
+            <div class="logo">
+                💬
+            </div>
+
+            <h1>
+                Mi Chat
+            </h1>
+
+            <p class="subtitulo">
+                Entra al chat y empieza a hablar
+            </p>
+
+            <input
+                id="nombre"
+                type="text"
+                placeholder="Escribe tu nombre"
+                maxlength="20"
+            >
+
+            <button onclick="entrar()">
+                Entrar al chat
+            </button>
+
+            <p id="error"></p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         PANTALLA PRINCIPAL
+         ========================= -->
+
+    <div id="pantallaChat">
+
+
+        <!-- CABECERA -->
+
+        <div class="cabecera">
+
+            <div class="logoPequeno">
+                💬
+            </div>
+
+            <div class="cabeceraTexto">
+
+                <h2>
+                    Mi Chat
+                </h2>
+
+                <div class="estado">
+                    ● En línea
+                </div>
+
+            </div>
+
+            <div
+                id="usuarioActual"
+                class="usuario">
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             MENSAJES
+             ========================= -->
+
+        <div id="mensajes">
+
+            <div class="mensajeVacio">
+
+                <div
+                    style="font-size: 35px;"
+                >
+                    💬
+                </div>
+
+                <p>
+                    Todavía no hay mensajes
+                </p>
+
+                <small>
+                    ¡Sé el primero en escribir!
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             ESCRIBIR
+             ========================= -->
+
+        <div class="zonaEscritura">
+
+            <input
+                id="mensajeInput"
+                type="text"
+                placeholder="Escribe un mensaje..."
+                maxlength="500"
+                onkeydown="pulsarEnter(event)"
+            >
+
+            <button
+                onclick="enviarMensaje()"
+            >
+                Enviar
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         PANTALLA JUEGO
+         ========================= -->
+
+    <section
+        id="pantallaJuego"
+        style="display: none;"
+    >
+
+        <iframe
+            src="juego/juego.html"
+            title="Juego de Botellas"
+        ></iframe>
+
+    </section>
+
+
+
+    <!-- =========================
+         SOCKET.IO
+         ========================= -->
+
+    <script src="/socket.io/socket.io.js"></script>
+
+
+    <script>
+
+
+        // =========================
+        // SOCKET
+        // =========================
+
+        const socket =
+            io();
+
+
+
+        // =========================
+        // VARIABLES
+        // =========================
+
+        let nombreUsuario = "";
+
+        let rangoBotelleroActual =
+            "NOOB";
+
+
+
+        // =========================
+        // RECIBIR RANGO DEL JUEGO
+        // =========================
+
+        window.addEventListener(
+            "message",
+            function(event) {
+
+                if (
+                    event.origin !==
+                    window.location.origin
+                ) {
+                    return;
+                }
+
+
+                if (
+                    !event.data ||
+                    event.data.tipo !==
+                    "rangoBotellero"
+                ) {
+                    return;
+                }
+
+
+                rangoBotelleroActual =
+                    event.data.rango ||
+                    "NOOB";
+
+            }
+        );
+
+
+
+        // =========================
+        // ENTRAR AL CHAT
+        // =========================
+
+        function entrar() {
+
+            const nombre =
+                document
+                    .getElementById("nombre")
+                    .value
+                    .trim();
+
+
+            if (nombre === "") {
+
+                document
+                    .getElementById("error")
+                    .textContent =
+                    "Escribe un nombre para continuar.";
+
+                return;
+
+            }
+
+
+            nombreUsuario =
+                nombre;
+
+
+            document
+                .getElementById(
+                    "pantallaEntrada"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "pantallaChat"
+                )
+                .style.display =
+                "flex";
+
+
+            document
+                .getElementById(
+                    "usuarioActual"
+                )
+                .textContent =
+                "👤 " + nombreUsuario;
+
+
+            document
+                .getElementById(
+                    "mensajeInput"
+                )
+                .focus();
+
+        }
+
+
+
+        // =========================
+        // ENVIAR MENSAJE
+        // =========================
+
+        function enviarMensaje() {
+
+            const input =
+                document.getElementById(
+                    "mensajeInput"
+                );
+
+
+            const texto =
+                input.value.trim();
+
+
+            if (texto === "") {
+                return;
+            }
+
+
+            socket.emit(
+                "mensaje",
+                {
+
+                    nombre:
+                        nombreUsuario,
+
+                    texto:
+                        texto,
+
+                    rango:
+                        rangoBotelleroActual
+
+                }
+            );
+
+
+            input.value = "";
+
+            input.focus();
+
+        }
+
+
+
+        // =========================
+        // RECIBIR MENSAJE
+        // =========================
+
+        socket.on(
+            "mensaje",
+            function(mensaje) {
+
+                const mensajeVacio =
+                    document.querySelector(
+                        ".mensajeVacio"
+                    );
+
+
+                if (mensajeVacio) {
+                    mensajeVacio.remove();
+                }
+
+
+                const mensajeElemento =
+                    document.createElement(
+                        "div"
+                    );
+
+                mensajeElemento.className =
+                    "mensaje";
+
+
+                // =========================
+                // NOMBRE
+                // =========================
+
+                const nombreElemento =
+                    document.createElement(
+                        "div"
+                    );
+
+                nombreElemento.className =
+                    "nombreUsuario";
+
+
+                nombreElemento.textContent =
+                    mensaje.nombre + " ";
+
+
+                // =========================
+                // RANGO
+                // =========================
+
+                const rangoElemento =
+                    document.createElement(
+                        "span"
+                    );
+
+                rangoElemento.className =
+                    "rango-botellero";
+
+
+                rangoElemento.textContent =
+                    "[" +
+                    (
+                        mensaje.rango ||
+                        "NOOB"
+                    ) +
+                    "]";
+
+
+                nombreElemento.appendChild(
+                    rangoElemento
+                );
+
+
+                // =========================
+                // TEXTO
+                // =========================
+
+                const contenido =
+                    document.createElement(
+                        "div"
+                    );
+
+                contenido.className =
+                    "textoMensaje";
+
+
+                contenido.textContent =
+                    mensaje.texto;
+
+
+                // =========================
+                // AÑADIR
+                // =========================
+
+                mensajeElemento.appendChild(
+                    nombreElemento
+                );
+
+                mensajeElemento.appendChild(
+                    contenido
+                );
+
+
+                document
+                    .getElementById(
+                        "mensajes"
+                    )
+                    .appendChild(
+                        mensajeElemento
+                    );
+
+
+                // =========================
+                // BAJAR AL FINAL
+                // =========================
+
+                const contenedor =
+                    document.getElementById(
+                        "mensajes"
+                    );
+
+
+                contenedor.scrollTop =
+                    contenedor.scrollHeight;
+
+            }
+        );
+
+
+
+        // =========================
+        // ENTER
+        // =========================
+
+        function pulsarEnter(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                enviarMensaje();
+
+            }
+
+        }
+
+
+
+        // =========================
+        // CAMBIAR A JUEGO
+        // =========================
+
+        function abrirJuego() {
+
+            document
+                .getElementById(
+                    "pantallaChat"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "pantallaJuego"
+                )
+                .style.display =
+                "block";
+
+        }
+
+
+
+        // =========================
+        // VOLVER AL CHAT
+        // =========================
+
+        function volverAlChat() {
+
+            document
+                .getElementById(
+                    "pantallaJuego"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "pantallaChat"
+                )
+                .style.display =
+                "flex";
+
+        }
+
+
+    </script>
+
+</body>
+
+</html>
