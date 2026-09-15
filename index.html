@@ -24,6 +24,7 @@
             overflow: hidden;
         }
 
+
         /* =========================
            PANTALLA PARA PONER NOMBRE
         ========================= */
@@ -97,6 +98,7 @@
             height: 100vh;
             width: 100%;
         }
+
 
         /* =========================
            BARRA LATERAL
@@ -223,8 +225,6 @@
             position: relative;
         }
 
-        /* Texto de fondo */
-
         #mensajes::before {
             content: "Gioian Bego CHARLIE KIRK";
             position: absolute;
@@ -256,10 +256,25 @@
         }
 
         .mensaje-nombre {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 5px;
             color: #725d20;
+        }
+
+        /*
+           EL NOMBRE ES LO PRINCIPAL.
+           EL RANGO ES PEQUEÑO Y DISCRETO.
+        */
+
+        .rango-botellero {
+            color: #c94a4a;
+            font-size: 10px;
+            font-weight: normal;
+            opacity: 0.75;
+            margin-left: 5px;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
         }
 
         .mensaje-texto {
@@ -395,6 +410,14 @@
             font-weight: bold;
             font-size: 13px;
             margin-top: 10px;
+        }
+
+        .imagen-rango {
+            color: #c94a4a;
+            font-size: 10px;
+            font-weight: normal;
+            opacity: .75;
+            margin-left: 5px;
         }
 
         .imagen-hora {
@@ -711,6 +734,25 @@
 
 
         /* =========================
+           JUEGO DE BOTELLAS
+        ========================= */
+
+        #pantallaJuego {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #111827;
+        }
+
+        #pantallaJuego iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+
+        /* =========================
            RESPONSIVE
         ========================= */
 
@@ -796,6 +838,7 @@
 
 <body>
 
+
     <!-- =========================
          PANTALLA NOMBRE
     ========================= -->
@@ -833,6 +876,7 @@
 
     <div id="app">
 
+
         <!-- BARRA LATERAL -->
 
         <aside class="sidebar">
@@ -865,6 +909,14 @@
                     onclick="cambiarPantalla('ruleta')"
                 >
                     🎰 Ruleta
+                </button>
+
+                <button
+                    class="menu-btn"
+                    id="menuJuego"
+                    onclick="cambiarPantalla('juego')"
+                >
+                    🍾 Juego de Botellas
                 </button>
 
             </div>
@@ -1188,6 +1240,24 @@
 
             </section>
 
+
+            <!-- =========================
+                 JUEGO DE BOTELLAS
+            ========================= -->
+
+            <section
+                id="pantallaJuego"
+                class="pantalla"
+            >
+
+                <iframe
+                    src="juego/juego.html"
+                    title="Juego de Botellas"
+                ></iframe>
+
+            </section>
+
+
         </main>
 
     </div>
@@ -1227,6 +1297,7 @@
 
     <script>
 
+
         /* =========================
            SOCKET.IO
         ========================= */
@@ -1239,6 +1310,8 @@
         ========================= */
 
         let nombre = "";
+
+        let rangoBotelleroActual = "NOOB";
 
         let pantallaActual = "chat";
 
@@ -1254,20 +1327,61 @@
 
 
         /* =========================
+           RECIBIR RANGO DEL JUEGO
+        ========================= */
+
+        window.addEventListener(
+            "message",
+            function(event){
+
+                if(
+                    event.origin !==
+                    window.location.origin
+                ){
+                    return;
+                }
+
+
+                if(
+                    !event.data ||
+                    event.data.tipo !==
+                    "rangoBotellero"
+                ){
+                    return;
+                }
+
+
+                rangoBotelleroActual =
+                    event.data.rango ||
+                    "NOOB";
+
+            }
+        );
+
+
+        /* =========================
            NOMBRE
         ========================= */
 
         const pantallaNombre =
-            document.getElementById("pantallaNombre");
+            document.getElementById(
+                "pantallaNombre"
+            );
 
         const app =
-            document.getElementById("app");
+            document.getElementById(
+                "app"
+            );
 
         const nombreInput =
-            document.getElementById("nombreInput");
+            document.getElementById(
+                "nombreInput"
+            );
 
         const entrarBtn =
-            document.getElementById("entrarBtn");
+            document.getElementById(
+                "entrarBtn"
+            );
 
 
         entrarBtn.addEventListener(
@@ -1293,23 +1407,35 @@
             const nombreEscrito =
                 nombreInput.value.trim();
 
+
             if(!nombreEscrito){
                 return;
             }
 
-            nombre = nombreEscrito;
+
+            nombre =
+                nombreEscrito;
+
 
             document.getElementById(
                 "nombreUsuario"
-            ).textContent = nombre;
+            ).textContent =
+                nombre;
+
 
             document.getElementById(
                 "nombreUsuarioImagenes"
-            ).textContent = nombre;
+            ).textContent =
+                nombre;
 
-            pantallaNombre.style.display = "none";
 
-            app.style.display = "flex";
+            pantallaNombre.style.display =
+                "none";
+
+
+            app.style.display =
+                "flex";
+
 
             moverMosca();
 
@@ -1322,31 +1448,50 @@
 
         function cambiarPantalla(pantalla){
 
-            pantallaActual = pantalla;
+            pantallaActual =
+                pantalla;
+
 
             document
                 .querySelectorAll(".pantalla")
                 .forEach(function(elemento){
-                    elemento.classList.remove("activa");
+
+                    elemento.classList.remove(
+                        "activa"
+                    );
+
                 });
 
 
             document
                 .querySelectorAll(".menu-btn")
                 .forEach(function(elemento){
-                    elemento.classList.remove("activo");
+
+                    elemento.classList.remove(
+                        "activo"
+                    );
+
                 });
 
 
             if(pantalla === "chat"){
 
                 document
-                    .getElementById("pantallaChat")
-                    .classList.add("activa");
+                    .getElementById(
+                        "pantallaChat"
+                    )
+                    .classList.add(
+                        "activa"
+                    );
+
 
                 document
-                    .getElementById("menuChat")
-                    .classList.add("activo");
+                    .getElementById(
+                        "menuChat"
+                    )
+                    .classList.add(
+                        "activo"
+                    );
 
             }
 
@@ -1354,12 +1499,21 @@
             if(pantalla === "imagenes"){
 
                 document
-                    .getElementById("pantallaImagenes")
-                    .classList.add("activa");
+                    .getElementById(
+                        "pantallaImagenes"
+                    )
+                    .classList.add(
+                        "activa"
+                    );
+
 
                 document
-                    .getElementById("menuImagenes")
-                    .classList.add("activo");
+                    .getElementById(
+                        "menuImagenes"
+                    )
+                    .classList.add(
+                        "activo"
+                    );
 
             }
 
@@ -1367,12 +1521,43 @@
             if(pantalla === "ruleta"){
 
                 document
-                    .getElementById("pantallaRuleta")
-                    .classList.add("activa");
+                    .getElementById(
+                        "pantallaRuleta"
+                    )
+                    .classList.add(
+                        "activa"
+                    );
+
 
                 document
-                    .getElementById("menuRuleta")
-                    .classList.add("activo");
+                    .getElementById(
+                        "menuRuleta"
+                    )
+                    .classList.add(
+                        "activo"
+                    );
+
+            }
+
+
+            if(pantalla === "juego"){
+
+                document
+                    .getElementById(
+                        "pantallaJuego"
+                    )
+                    .classList.add(
+                        "activa"
+                    );
+
+
+                document
+                    .getElementById(
+                        "menuJuego"
+                    )
+                    .classList.add(
+                        "activo"
+                    );
 
             }
 
@@ -1389,7 +1574,8 @@
 
                 document.getElementById(
                     "contadorUsuarios"
-                ).textContent = cantidad;
+                ).textContent =
+                    cantidad;
 
             }
         );
@@ -1400,10 +1586,14 @@
         ========================= */
 
         const mensajeInput =
-            document.getElementById("mensajeInput");
+            document.getElementById(
+                "mensajeInput"
+            );
 
         const enviarBtn =
-            document.getElementById("enviarBtn");
+            document.getElementById(
+                "enviarBtn"
+            );
 
 
         function enviarMensaje(){
@@ -1411,14 +1601,23 @@
             const texto =
                 mensajeInput.value.trim();
 
+
             if(!texto){
                 return;
             }
 
 
             const datos = {
-                nombre: nombre,
-                texto: texto
+
+                nombre:
+                    nombre,
+
+                texto:
+                    texto,
+
+                rango:
+                    rangoBotelleroActual
+
             };
 
 
@@ -1428,7 +1627,8 @@
             );
 
 
-            mensajeInput.value = "";
+            mensajeInput.value =
+                "";
 
             mensajeInput.focus();
 
@@ -1461,32 +1661,31 @@
             "mensaje",
             function(mensaje){
 
-                /*
-                 Intentamos detectar si el mensaje
-                 es uno de nuestros mensajes especiales.
-                */
+                let contenidoEspecial =
+                    null;
 
-                let contenidoEspecial = null;
 
                 try {
 
                     contenidoEspecial =
-                        JSON.parse(mensaje.texto);
+                        JSON.parse(
+                            mensaje.texto
+                        );
 
                 } catch(e){
 
-                    contenidoEspecial = null;
+                    contenidoEspecial =
+                        null;
 
                 }
 
 
-                /*
-                 IMAGEN
-                */
+                /* IMAGEN */
 
                 if(
                     contenidoEspecial &&
-                    contenidoEspecial.tipo === "imagen"
+                    contenidoEspecial.tipo ===
+                    "imagen"
                 ){
 
                     if(
@@ -1497,7 +1696,8 @@
                         mostrarImagenGaleria(
                             mensaje.nombre,
                             contenidoEspecial.datos,
-                            mensaje.hora
+                            mensaje.hora,
+                            mensaje.rango
                         );
 
                     } else {
@@ -1505,18 +1705,18 @@
                         mostrarImagenChat(
                             mensaje.nombre,
                             contenidoEspecial.datos,
-                            mensaje.hora
+                            mensaje.hora,
+                            mensaje.rango
                         );
 
                     }
 
                     return;
+
                 }
 
 
-                /*
-                 MENSAJE NORMAL
-                */
+                /* MENSAJE NORMAL */
 
                 mostrarMensajeTexto(
                     mensaje
@@ -1526,7 +1726,13 @@
         );
 
 
-        function mostrarMensajeTexto(mensaje){
+        /* =========================
+           MOSTRAR MENSAJE TEXTO
+        ========================= */
+
+        function mostrarMensajeTexto(
+            mensaje
+        ){
 
             const mensajes =
                 document.getElementById(
@@ -1535,53 +1741,109 @@
 
 
             const caja =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            caja.className = "mensaje";
+
+            caja.className =
+                "mensaje";
 
 
-            if(mensaje.nombre === nombre){
-                caja.classList.add("mio");
+            if(
+                mensaje.nombre ===
+                nombre
+            ){
+
+                caja.classList.add(
+                    "mio"
+                );
+
             }
 
 
             const nombreElemento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             nombreElemento.className =
                 "mensaje-nombre";
+
 
             nombreElemento.textContent =
                 mensaje.nombre;
 
 
+            const rangoElemento =
+                document.createElement(
+                    "span"
+                );
+
+
+            rangoElemento.className =
+                "rango-botellero";
+
+
+            rangoElemento.textContent =
+                "[" +
+                (
+                    mensaje.rango ||
+                    "NOOB"
+                ) +
+                "]";
+
+
+            nombreElemento.appendChild(
+                rangoElemento
+            );
+
+
             const textoElemento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             textoElemento.className =
                 "mensaje-texto";
+
 
             textoElemento.textContent =
                 mensaje.texto;
 
 
             const horaElemento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             horaElemento.className =
                 "mensaje-hora";
+
 
             horaElemento.textContent =
                 mensaje.hora;
 
 
-            caja.appendChild(nombreElemento);
+            caja.appendChild(
+                nombreElemento
+            );
 
-            caja.appendChild(textoElemento);
+            caja.appendChild(
+                textoElemento
+            );
 
-            caja.appendChild(horaElemento);
+            caja.appendChild(
+                horaElemento
+            );
 
-            mensajes.appendChild(caja);
+
+            mensajes.appendChild(
+                caja
+            );
 
 
             mensajes.scrollTop =
@@ -1608,7 +1870,9 @@
         imagenBtn.addEventListener(
             "click",
             function(){
+
                 archivoImagen.click();
+
             }
         );
 
@@ -1619,6 +1883,7 @@
 
                 const archivo =
                     archivoImagen.files[0];
+
 
                 if(!archivo){
                     return;
@@ -1631,7 +1896,8 @@
                 );
 
 
-                archivoImagen.value = "";
+                archivoImagen.value =
+                    "";
 
             }
         );
@@ -1669,6 +1935,7 @@
                 const archivo =
                     archivoImagenes.files[0];
 
+
                 if(!archivo){
                     return;
                 }
@@ -1680,7 +1947,8 @@
                 );
 
 
-                archivoImagenes.value = "";
+                archivoImagenes.value =
+                    "";
 
             }
         );
@@ -1696,7 +1964,9 @@
         ){
 
             if(
-                !archivo.type.startsWith("image/")
+                !archivo.type.startsWith(
+                    "image/"
+                )
             ){
 
                 alert(
@@ -1704,15 +1974,13 @@
                 );
 
                 return;
+
             }
 
 
-            /*
-             Máximo 5 MB
-            */
-
             if(
-                archivo.size > 5 * 1024 * 1024
+                archivo.size >
+                5 * 1024 * 1024
             ){
 
                 alert(
@@ -1720,6 +1988,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1727,33 +1996,45 @@
                 new FileReader();
 
 
-            lector.onload = function(){
+            lector.onload =
+                function(){
 
-                const datos = {
-                    nombre: nombre,
+                    const datos = {
 
-                    texto: JSON.stringify({
+                        nombre:
+                            nombre,
 
-                        tipo: "imagen",
+                        rango:
+                            rangoBotelleroActual,
 
-                        canal: canal,
+                        texto:
+                            JSON.stringify({
 
-                        datos: lector.result
+                                tipo:
+                                    "imagen",
 
-                    })
+                                canal:
+                                    canal,
+
+                                datos:
+                                    lector.result
+
+                            })
+
+                    };
+
+
+                    socket.emit(
+                        "mensaje",
+                        datos
+                    );
 
                 };
 
 
-                socket.emit(
-                    "mensaje",
-                    datos
-                );
-
-            };
-
-
-            lector.readAsDataURL(archivo);
+            lector.readAsDataURL(
+                archivo
+            );
 
         }
 
@@ -1765,7 +2046,8 @@
         function mostrarImagenChat(
             nombreAutor,
             imagen,
-            hora
+            hora,
+            rango
         ){
 
             const mensajes =
@@ -1775,33 +2057,78 @@
 
 
             const caja =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            caja.className = "mensaje";
+
+            caja.className =
+                "mensaje";
 
 
-            if(nombreAutor === nombre){
-                caja.classList.add("mio");
+            if(
+                nombreAutor ===
+                nombre
+            ){
+
+                caja.classList.add(
+                    "mio"
+                );
+
             }
 
 
             const autor =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             autor.className =
                 "mensaje-nombre";
+
 
             autor.textContent =
                 nombreAutor;
 
 
+            const rangoElemento =
+                document.createElement(
+                    "span"
+                );
+
+
+            rangoElemento.className =
+                "rango-botellero";
+
+
+            rangoElemento.textContent =
+                "[" +
+                (
+                    rango ||
+                    "NOOB"
+                ) +
+                "]";
+
+
+            autor.appendChild(
+                rangoElemento
+            );
+
+
             const img =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
+
 
             img.className =
                 "imagen-mensaje";
 
-            img.src = imagen;
+
+            img.src =
+                imagen;
+
 
             img.alt =
                 "Imagen enviada por " +
@@ -1809,22 +2136,37 @@
 
 
             const horaElemento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             horaElemento.className =
                 "mensaje-hora";
+
 
             horaElemento.textContent =
                 hora;
 
 
-            caja.appendChild(autor);
+            caja.appendChild(
+                autor
+            );
 
-            caja.appendChild(img);
 
-            caja.appendChild(horaElemento);
+            caja.appendChild(
+                img
+            );
 
-            mensajes.appendChild(caja);
+
+            caja.appendChild(
+                horaElemento
+            );
+
+
+            mensajes.appendChild(
+                caja
+            );
 
 
             mensajes.scrollTop =
@@ -1840,7 +2182,8 @@
         function mostrarImagenGaleria(
             nombreAutor,
             imagen,
-            hora
+            hora,
+            rango
         ){
 
             const galeria =
@@ -1850,16 +2193,24 @@
 
 
             const tarjeta =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             tarjeta.className =
                 "imagen-tarjeta";
 
 
             const img =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
 
-            img.src = imagen;
+
+            img.src =
+                imagen;
+
 
             img.alt =
                 "Imagen de " +
@@ -1867,39 +2218,87 @@
 
 
             const autor =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             autor.className =
                 "imagen-autor";
 
+
             autor.textContent =
-                "👤 " + nombreAutor;
+                "👤 " +
+                nombreAutor;
+
+
+            const rangoElemento =
+                document.createElement(
+                    "span"
+                );
+
+
+            rangoElemento.className =
+                "imagen-rango";
+
+
+            rangoElemento.textContent =
+                "[" +
+                (
+                    rango ||
+                    "NOOB"
+                ) +
+                "]";
+
+
+            autor.appendChild(
+                rangoElemento
+            );
 
 
             const horaElemento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             horaElemento.className =
                 "imagen-hora";
+
 
             horaElemento.textContent =
                 hora;
 
 
-            tarjeta.appendChild(img);
+            tarjeta.appendChild(
+                img
+            );
 
-            tarjeta.appendChild(autor);
 
-            tarjeta.appendChild(horaElemento);
+            tarjeta.appendChild(
+                autor
+            );
 
-            galeria.appendChild(tarjeta);
+
+            tarjeta.appendChild(
+                horaElemento
+            );
+
+
+            galeria.appendChild(
+                tarjeta
+            );
 
 
             document
-                .querySelector(".imagenes-contenido")
+                .querySelector(
+                    ".imagenes-contenido"
+                )
                 .scrollTop =
                 document
-                    .querySelector(".imagenes-contenido")
+                    .querySelector(
+                        ".imagenes-contenido"
+                    )
                     .scrollHeight;
 
         }
@@ -1914,10 +2313,12 @@
                 "mosca"
             );
 
+
         const moscaOverlay =
             document.getElementById(
                 "moscaOverlay"
             );
+
 
         const baleBaleBtn =
             document.getElementById(
@@ -1925,7 +2326,8 @@
             );
 
 
-        let moscaMoviendose = true;
+        let moscaMoviendose =
+            true;
 
 
         function moverMosca(){
@@ -1935,7 +2337,8 @@
             }
 
 
-            const margen = 10;
+            const margen =
+                10;
 
 
             const ancho =
@@ -1950,36 +2353,40 @@
                 margen * 2;
 
 
-            if(ancho <= 0 || alto <= 0){
+            if(
+                ancho <= 0 ||
+                alto <= 0
+            ){
+
                 return;
+
             }
 
 
             const nuevaX =
                 margen +
-                Math.random() * ancho;
+                Math.random() *
+                ancho;
 
 
             const nuevaY =
                 margen +
-                Math.random() * alto;
+                Math.random() *
+                alto;
 
 
             mosca.style.left =
                 nuevaX + "px";
 
+
             mosca.style.top =
                 nuevaY + "px";
 
 
-            /*
-             Tiempo aleatorio para que
-             no vaya siempre igual.
-            */
-
             const siguienteMovimiento =
                 2800 +
-                Math.random() * 2800;
+                Math.random() *
+                2800;
 
 
             setTimeout(
@@ -1996,7 +2403,8 @@
 
                 e.stopPropagation();
 
-                moscaMoviendose = false;
+                moscaMoviendose =
+                    false;
 
                 moscaOverlay.style.display =
                     "flex";
@@ -2012,7 +2420,8 @@
                 moscaOverlay.style.display =
                     "none";
 
-                moscaMoviendose = true;
+                moscaMoviendose =
+                    true;
 
                 moverMosca();
 
@@ -2024,8 +2433,12 @@
             "resize",
             function(){
 
-                if(moscaMoviendose){
+                if(
+                    moscaMoviendose
+                ){
+
                     moverMosca();
+
                 }
 
             }
@@ -2063,10 +2476,6 @@
             );
 
 
-        /*
-         Crear números 0–36.
-        */
-
         for(
             let numero = 0;
             numero <= 36;
@@ -2074,7 +2483,10 @@
         ){
 
             const boton =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
 
             boton.className =
                 "numero-apuesta";
@@ -2108,7 +2520,8 @@
 
 
             boton.dataset.apuesta =
-                "numero-" + numero;
+                "numero-" +
+                numero;
 
 
             boton.addEventListener(
@@ -2116,7 +2529,8 @@
                 function(){
 
                     seleccionarApuesta(
-                        "numero-" + numero,
+                        "numero-" +
+                        numero,
                         boton
                     );
 
@@ -2136,36 +2550,46 @@
         ========================= */
 
         document
-            .querySelectorAll(".ficha")
-            .forEach(function(ficha){
+            .querySelectorAll(
+                ".ficha"
+            )
+            .forEach(
+                function(ficha){
 
-                ficha.addEventListener(
-                    "click",
-                    function(){
+                    ficha.addEventListener(
+                        "click",
+                        function(){
 
-                        document
-                            .querySelectorAll(".ficha")
-                            .forEach(function(f){
-                                f.classList.remove(
-                                    "seleccionada"
+                            document
+                                .querySelectorAll(
+                                    ".ficha"
+                                )
+                                .forEach(
+                                    function(f){
+
+                                        f.classList.remove(
+                                            "seleccionada"
+                                        );
+
+                                    }
                                 );
-                            });
 
 
-                        ficha.classList.add(
-                            "seleccionada"
-                        );
-
-
-                        fichaSeleccionada =
-                            Number(
-                                ficha.dataset.valor
+                            ficha.classList.add(
+                                "seleccionada"
                             );
 
-                    }
-                );
 
-            });
+                            fichaSeleccionada =
+                                Number(
+                                    ficha.dataset.valor
+                                );
+
+                        }
+                    );
+
+                }
+            );
 
 
         /* =========================
@@ -2173,22 +2597,26 @@
         ========================= */
 
         document
-            .querySelectorAll(".apuesta-extra")
-            .forEach(function(boton){
+            .querySelectorAll(
+                ".apuesta-extra"
+            )
+            .forEach(
+                function(boton){
 
-                boton.addEventListener(
-                    "click",
-                    function(){
+                    boton.addEventListener(
+                        "click",
+                        function(){
 
-                        seleccionarApuesta(
-                            boton.dataset.apuesta,
-                            boton
-                        );
+                            seleccionarApuesta(
+                                boton.dataset.apuesta,
+                                boton
+                            );
 
-                    }
-                );
+                        }
+                    );
 
-            });
+                }
+            );
 
 
         /* =========================
@@ -2206,7 +2634,8 @@
 
 
             if(
-                saldo < fichaSeleccionada
+                saldo <
+                fichaSeleccionada
             ){
 
                 alert(
@@ -2214,17 +2643,14 @@
                 );
 
                 return;
+
             }
 
 
-            /*
-             Si ya existe la apuesta,
-             añadimos otra ficha.
-            */
-
             if(!apuestas[tipo]){
 
-                apuestas[tipo] = 0;
+                apuestas[tipo] =
+                    0;
 
             }
 
@@ -2233,7 +2659,8 @@
                 fichaSeleccionada;
 
 
-            saldo -= fichaSeleccionada;
+            saldo -=
+                fichaSeleccionada;
 
 
             comprobarSaldoMinimo();
@@ -2277,16 +2704,20 @@
 
         function actualizarResumen(){
 
-            let total = 0;
+            let total =
+                0;
 
 
             Object.values(
                 apuestas
-            ).forEach(function(valor){
+            ).forEach(
+                function(valor){
 
-                total += valor;
+                    total +=
+                        valor;
 
-            });
+                }
+            );
 
 
             document.getElementById(
@@ -2302,7 +2733,9 @@
         ========================= */
 
         document
-            .getElementById("botonLimpiar")
+            .getElementById(
+                "botonLimpiar"
+            )
             .addEventListener(
                 "click",
                 limpiarApuestas
@@ -2318,27 +2751,33 @@
 
             Object.values(
                 apuestas
-            ).forEach(function(valor){
+            ).forEach(
+                function(valor){
 
-                saldo += valor;
+                    saldo +=
+                        valor;
 
-            });
+                }
+            );
 
 
-            apuestas = {};
+            apuestas =
+                {};
 
 
             document
                 .querySelectorAll(
                     ".apuesta-seleccionada"
                 )
-                .forEach(function(elemento){
+                .forEach(
+                    function(elemento){
 
-                    elemento.classList.remove(
-                        "apuesta-seleccionada"
-                    );
+                        elemento.classList.remove(
+                            "apuesta-seleccionada"
+                        );
 
-                });
+                    }
+                );
 
 
             actualizarSaldo();
@@ -2353,7 +2792,9 @@
         ========================= */
 
         document
-            .getElementById("botonGirar")
+            .getElementById(
+                "botonGirar"
+            )
             .addEventListener(
                 "click",
                 girarRuleta
@@ -2362,16 +2803,20 @@
 
         function calcularTotalApostado(){
 
-            let total = 0;
+            let total =
+                0;
 
 
             Object.values(
                 apuestas
-            ).forEach(function(valor){
+            ).forEach(
+                function(valor){
 
-                total += valor;
+                    total +=
+                        valor;
 
-            });
+                }
+            );
 
 
             return total;
@@ -2397,20 +2842,24 @@
                 );
 
                 return;
+
             }
 
 
-            girando = true;
+            girando =
+                true;
 
 
             document.getElementById(
                 "botonGirar"
-            ).disabled = true;
+            ).disabled =
+                true;
 
 
             document.getElementById(
                 "botonLimpiar"
-            ).disabled = true;
+            ).disabled =
+                true;
 
 
             const indice =
@@ -2423,15 +2872,6 @@
             const numero =
                 numerosRuleta[indice];
 
-
-            /*
-             Cada sector ocupa:
-             360 / 37 grados.
-
-             Calculamos la rotación necesaria
-             para llevar el número ganador
-             hasta el puntero de arriba.
-            */
 
             const sector =
                 360 / 37;
@@ -2470,33 +2910,29 @@
            RESULTADO RULETA
         ========================= */
 
-        function terminarGiro(numero){
+        function terminarGiro(
+            numero
+        ){
 
-            let ganancia = 0;
+            let ganancia =
+                0;
 
-
-            /*
-             Número exacto
-             Pago total = apuesta x 36
-            */
 
             if(
                 apuestas[
-                    "numero-" + numero
+                    "numero-" +
+                    numero
                 ]
             ){
 
                 ganancia +=
                     apuestas[
-                        "numero-" + numero
+                        "numero-" +
+                        numero
                     ] * 36;
 
             }
 
-
-            /*
-             Rojo / negro
-            */
 
             if(numero !== 0){
 
@@ -2506,7 +2942,8 @@
                 ){
 
                     ganancia +=
-                        apuestas.rojo * 2;
+                        apuestas.rojo *
+                        2;
 
                 }
 
@@ -2517,14 +2954,11 @@
                 ){
 
                     ganancia +=
-                        apuestas.negro * 2;
+                        apuestas.negro *
+                        2;
 
                 }
 
-
-                /*
-                 Par / impar
-                */
 
                 if(
                     numero % 2 === 0 &&
@@ -2532,7 +2966,8 @@
                 ){
 
                     ganancia +=
-                        apuestas.par * 2;
+                        apuestas.par *
+                        2;
 
                 }
 
@@ -2543,14 +2978,11 @@
                 ){
 
                     ganancia +=
-                        apuestas.impar * 2;
+                        apuestas.impar *
+                        2;
 
                 }
 
-
-                /*
-                 1–18 / 19–36
-                */
 
                 if(
                     numero >= 1 &&
@@ -2559,7 +2991,8 @@
                 ){
 
                     ganancia +=
-                        apuestas.bajo * 2;
+                        apuestas.bajo *
+                        2;
 
                 }
 
@@ -2571,14 +3004,11 @@
                 ){
 
                     ganancia +=
-                        apuestas.alto * 2;
+                        apuestas.alto *
+                        2;
 
                 }
 
-
-                /*
-                 Docenas
-                */
 
                 if(
                     numero >= 1 &&
@@ -2587,7 +3017,8 @@
                 ){
 
                     ganancia +=
-                        apuestas.docena1 * 3;
+                        apuestas.docena1 *
+                        3;
 
                 }
 
@@ -2599,7 +3030,8 @@
                 ){
 
                     ganancia +=
-                        apuestas.docena2 * 3;
+                        apuestas.docena2 *
+                        3;
 
                 }
 
@@ -2611,23 +3043,19 @@
                 ){
 
                     ganancia +=
-                        apuestas.docena3 * 3;
+                        apuestas.docena3 *
+                        3;
 
                 }
 
             }
 
 
-            saldo += ganancia;
+            saldo +=
+                ganancia;
 
-
-            /*
-             Si terminamos con menos de 10,
-             automáticamente damos 20.
-            */
 
             comprobarSaldoMinimo();
-
 
             actualizarSaldo();
 
@@ -2651,42 +3079,42 @@
             }
 
 
-            apuestas = {};
+            apuestas =
+                {};
 
 
             document
                 .querySelectorAll(
                     ".apuesta-seleccionada"
                 )
-                .forEach(function(elemento){
+                .forEach(
+                    function(elemento){
 
-                    elemento.classList.remove(
-                        "apuesta-seleccionada"
-                    );
+                        elemento.classList.remove(
+                            "apuesta-seleccionada"
+                        );
 
-                });
+                    }
+                );
 
 
             actualizarResumen();
 
 
-            /*
-             No hay temporizador.
-             Simplemente termina la tirada
-             y se pueden volver a realizar apuestas.
-            */
-
-            girando = false;
+            girando =
+                false;
 
 
             document.getElementById(
                 "botonGirar"
-            ).disabled = false;
+            ).disabled =
+                false;
 
 
             document.getElementById(
                 "botonLimpiar"
-            ).disabled = false;
+            ).disabled =
+                false;
 
         }
 
