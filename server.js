@@ -7,74 +7,194 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 
-// Servir nuestra página
+// =========================
+// SERVIR LA PÁGINA
+// =========================
+
 app.use(express.static(__dirname));
 
 
-// Contador de usuarios
+// =========================
+// USUARIOS CONECTADOS
+// =========================
+
 let usuariosConectados = 0;
 
 
-// Cuando alguien se conecta
+// =========================
+// COMPROBAR RANGO
+// =========================
+
+function normalizarRango(rango) {
+
+    const valor =
+        String(rango || "NOOB").trim();
+
+
+    // Rangos normales
+
+    if (
+        valor === "NOOB" ||
+        valor === "MINI" ||
+        valor === "PRO" ||
+        valor === "HACKER" ||
+        valor === "GOD"
+    ) {
+
+        return valor;
+
+    }
+
+
+    // Rangos BOTELLERO
+
+    if (
+        /^BOTELLERO [1-9]\d*$/.test(valor)
+    ) {
+
+        return valor;
+
+    }
+
+
+    // Si alguien intenta mandar
+    // un rango que no existe
+
+    return "NOOB";
+}
+
+
+// =========================
+// CONEXIÓN DE USUARIO
+// =========================
+
 io.on("connection", (socket) => {
 
     usuariosConectados++;
 
-    console.log("Un usuario se ha conectado");
-    console.log("Usuarios conectados:", usuariosConectados);
+
+    console.log(
+        "Un usuario se ha conectado"
+    );
 
 
-    // Avisar a todos cuántas personas hay
-    io.emit("usuarios", usuariosConectados);
+    console.log(
+        "Usuarios conectados:",
+        usuariosConectados
+    );
 
 
-    // Recibir un mensaje
-    socket.on("mensaje", (datos) => {
+    // Actualizar contador
+    // para todos
 
-        const mensaje = {
-
-            nombre: datos.nombre,
-
-            texto: datos.texto,
-
-            hora: new Date().toLocaleTimeString("es-ES", {
-                hour: "2-digit",
-                minute: "2-digit"
-            })
-
-        };
+    io.emit(
+        "usuarios",
+        usuariosConectados
+    );
 
 
-        // Enviar el mensaje a todos
-        io.emit("mensaje", mensaje);
+    // =========================
+    // RECIBIR MENSAJE
+    // =========================
 
-    });
+    socket.on(
+        "mensaje",
+        (datos) => {
+
+            const mensaje = {
+
+                nombre:
+                    String(
+                        datos.nombre || "Usuario"
+                    ).trim(),
+
+                texto:
+                    String(
+                        datos.texto || ""
+                    ),
+
+                rango:
+                    normalizarRango(
+                        datos.rango
+                    ),
+
+                hora:
+                    new Date().toLocaleTimeString(
+                        "es-ES",
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    )
+
+            };
 
 
-    // Cuando alguien se desconecta
-    socket.on("disconnect", () => {
+            // Enviar el mensaje
+            // a todos los usuarios
 
-        usuariosConectados--;
+            io.emit(
+                "mensaje",
+                mensaje
+            );
 
-        console.log("Un usuario se ha desconectado");
-        console.log("Usuarios conectados:", usuariosConectados);
+        }
+    );
 
 
-        // Actualizar contador
-        io.emit("usuarios", usuariosConectados);
+    // =========================
+    // DESCONECTAR USUARIO
+    // =========================
 
-    });
+    socket.on(
+        "disconnect",
+        () => {
+
+            usuariosConectados--;
+
+
+            console.log(
+                "Un usuario se ha desconectado"
+            );
+
+
+            console.log(
+                "Usuarios conectados:",
+                usuariosConectados
+            );
+
+
+            io.emit(
+                "usuarios",
+                usuariosConectados
+            );
+
+        }
+    );
 
 });
 
 
-// Puerto para Render o para nuestro ordenador
-const PORT = process.env.PORT || 3000;
+// =========================
+// PUERTO
+// =========================
+
+const PORT =
+    process.env.PORT || 3000;
 
 
-// Iniciar servidor
-server.listen(PORT, "0.0.0.0", () => {
+// =========================
+// INICIAR SERVIDOR
+// =========================
 
-    console.log(`🚀 Servidor iniciado en el puerto ${PORT}`);
+server.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
 
-});
+        console.log(
+            `🚀 Servidor iniciado en el puerto ${PORT}`
+        );
+
+    }
+);
